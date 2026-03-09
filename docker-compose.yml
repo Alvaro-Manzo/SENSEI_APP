@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  # ── Backend API ──────────────────────────────────────────────────────────────
+  backend:
+    build: ./backend
+    container_name: sensei_backend
+    restart: unless-stopped
+    env_file: ./backend/.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Bot Telegram (ejemplo: un cliente) ──────────────────────────────────────
+  # Para agregar otro cliente: duplica este bloque con nuevo ORG_ID y BOT_TOKEN
+  bot_org1:
+    build: ./bot
+    container_name: sensei_bot_org1
+    restart: unless-stopped
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN_ORG1}
+      - ORG_ID=${ORG_ID_1}
+      - API_BASE_URL=http://backend:8000/api
+      - BOT_SECRET=${BOT_SECRET}
+    depends_on:
+      - backend
+
+  # ── Frontend Next.js ─────────────────────────────────────────────────────────
+  frontend:
+    build: ./frontend
+    container_name: sensei_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api
+    depends_on:
+      - backend
