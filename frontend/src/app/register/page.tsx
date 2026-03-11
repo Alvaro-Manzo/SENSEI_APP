@@ -51,7 +51,7 @@ export default function RegisterPage() {
               type="text"
               value={form.nombre_academia}
               onChange={handleChange}
-              placeholder="Dojo Pumma, Academia Tigre..."
+              placeholder="Team Pumma, Academia Tigre..."
               className="w-full border border-slate-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500"
               required
             />
