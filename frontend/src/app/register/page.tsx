@@ -8,7 +8,8 @@ export default function RegisterPage() {
   const router = useRouter();
   const { setAuth } = useAuthStore();
   const [form, setForm] = useState({
-    nombre_academia: "",
+    nombre: "",
+    org_nombre: "",
     deporte: "",
     email: "",
     password: "",
@@ -45,11 +46,24 @@ export default function RegisterPage() {
 
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Tu nombre</label>
+            <input
+              name="nombre"
+              type="text"
+              value={form.nombre}
+              onChange={handleChange}
+              placeholder="Alvaro Manzo"
+              className="w-full border border-slate-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500"
+              required
+            />
+          </div>
+
+          <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Nombre de tu academia</label>
             <input
-              name="nombre_academia"
+              name="org_nombre"
               type="text"
-              value={form.nombre_academia}
+              value={form.org_nombre}
               onChange={handleChange}
               placeholder="Team Pumma, Academia Tigre..."
               className="w-full border border-slate-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-500"
