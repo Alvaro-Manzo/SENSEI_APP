@@ -1,15 +1,27 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from app.core.database import get_supabase
 from app.core.security import get_current_org
 from datetime import datetime
 
 router = APIRouter()
 
+PLAN_RANK = {"free": 0, "starter": 1, "pro": 2, "elite": 3}
+
+def require_plan(db, org_id: str, required: str):
+    org = db.table("organizations").select("plan").eq("id", org_id).single().execute()
+    plan = org.data.get("plan", "free") if org.data else "free"
+    if PLAN_RANK.get(plan, 0) < PLAN_RANK.get(required, 99):
+        raise HTTPException(
+            status_code=403,
+            detail=f"Esta función requiere el plan {required} o superior. Actualiza en /pricing"
+        )
+
 
 @router.get("/annual")
 async def annual_report(anio: int = None, org_id: str = Depends(get_current_org)):
-    """Reporte anual: recaudación por mes"""
+    """Reporte anual: recaudación por mes. Requiere plan starter+"""
     db = get_supabase()
+    require_plan(db, org_id, "starter")
     anio = anio or datetime.now().year
 
     pagos = db.table("payments")\
@@ -18,23 +30,24 @@ async def annual_report(anio: int = None, org_id: str = Depends(get_current_org)
         .eq("anio", anio)\
         .execute()
 
-    meses_nombres = ["Enero","Febrero","Marzo","Abril","Mayo","Junio",
-                     "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
-
-    desglose = []
-    total_anual = 0
-    for i, nombre in enumerate(meses_nombres, 1):
+    meses_data = []
+    for i in range(1, 13):
         pagos_mes = [p for p in pagos.data if p["mes"] == i]
-        total_mes = sum(p["monto"] for p in pagos_mes)
-        total_anual += total_mes
-        desglose.append({"mes": nombre, "mes_num": i, "total": total_mes, "pagos": len(pagos_mes)})
+        pagados = [p for p in pagos_mes if p.get("estado") == "pagado"]
+        pendientes = [p for p in pagos_mes if p.get("estado") != "pagado"]
+        meses_data.append({
+            "mes": i,
+            "pagados": len(pagados),
+            "pendientes": len(pendientes),
+            "recaudado": sum(p["monto"] for p in pagados),
+        })
 
-    return {"anio": anio, "total_anual": total_anual, "meses": desglose}
+    return {"anio": anio, "meses": meses_data}
 
 
 @router.get("/deudores")
 async def deudores(meses_minimo: int = 2, org_id: str = Depends(get_current_org)):
-    """Alumnos con N o más meses sin pagar (consecutivos desde hoy)"""
+    """Alumnos con N o más meses sin pagar"""
     db = get_supabase()
     now = datetime.now()
     mes_actual = now.month
@@ -57,7 +70,7 @@ async def deudores(meses_minimo: int = 2, org_id: str = Depends(get_current_org)
             deudores_list.append({
                 "id": m["id"],
                 "nombre": m["nombre"],
-                "actividad": m["actividad"],
+                "actividad": m.get("actividad") or "Sin actividad",
                 "meses_sin_pagar": meses_sin_pagar,
             })
 

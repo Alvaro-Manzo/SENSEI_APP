@@ -24,7 +24,7 @@ async def create_member(data: MemberCreate, org_id: str = Depends(get_current_or
     # Verificar límite por plan
     count = db.table("members").select("id", count="exact").eq("org_id", org_id).eq("activo", True).execute()
     org = db.table("organizations").select("plan").eq("id", org_id).single().execute()
-    limits = {"free": 15, "starter": 50, "pro": 200, "elite": 999999}
+    limits = {"free": 10, "starter": 50, "pro": 200, "elite": 999999}
     plan = org.data.get("plan", "free")
     if count.count >= limits.get(plan, 15):
         raise HTTPException(status_code=403, detail=f"Límite de alumnos alcanzado para el plan {plan}. Actualiza tu plan.")

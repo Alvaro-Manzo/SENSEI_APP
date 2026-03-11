@@ -41,7 +41,12 @@ export default function RegisterPage() {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-slate-900">🥋 Sensei</h1>
-          <p className="text-slate-500 mt-2">Registra tu academia — gratis por 14 días</p>
+          <p className="text-slate-500 mt-2">Registra tu academia — <span className="text-purple-600 font-semibold">gratis para siempre</span></p>
+          <div className="flex items-center justify-center gap-4 mt-3 text-xs text-slate-500">
+            <span>✅ Sin tarjeta de crédito</span>
+            <span>✅ 2 min para empezar</span>
+            <span>✅ En español</span>
+          </div>
         </div>
 
         <form onSubmit={handleRegister} className="space-y-4">
@@ -126,13 +131,17 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-slate-900 text-white rounded-lg py-3 font-semibold hover:bg-slate-700 transition disabled:opacity-50"
+            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg py-3 font-semibold hover:opacity-90 transition disabled:opacity-50 shadow-lg shadow-purple-200"
           >
-            {loading ? "Creando academia..." : "Crear academia gratis"}
+            {loading ? "Creando academia..." : "🚀 Crear mi academia gratis"}
           </button>
         </form>
 
-        <p className="text-center text-slate-500 text-sm mt-6">
+        <p className="text-center text-slate-400 text-xs mt-4">
+          Al registrarte aceptas los <a href="#" className="underline">Términos de uso</a> y la <a href="#" className="underline">Privacidad</a>
+        </p>
+
+        <p className="text-center text-slate-500 text-sm mt-3">
           ¿Ya tienes cuenta?{" "}
           <a href="/login" className="text-slate-900 font-medium hover:underline">
             Iniciar sesión
