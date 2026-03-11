@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
+import Navbar from "@/components/Navbar";
 
 export default function SettingsPage() {
   const [org, setOrg] = useState<any>(null);
@@ -30,6 +31,7 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <Navbar />
       <div className="max-w-2xl mx-auto px-6 py-8">
         <h1 className="text-2xl font-bold text-slate-900 mb-8">⚙️ Configuración</h1>
 

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 
 interface Stats {
   total_alumnos: number;
@@ -40,21 +41,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-slate-900">{org?.nombre}</h1>
-          <p className="text-sm text-slate-500">{org?.deporte}</p>
-        </div>
-        <nav className="flex gap-4 text-sm font-medium text-slate-600">
-          <Link href="/dashboard" className="text-slate-900">Dashboard</Link>
-          <Link href="/members" className="hover:text-slate-900">Alumnos</Link>
-          <Link href="/payments" className="hover:text-slate-900">Pagos</Link>
-          <Link href="/reports" className="hover:text-slate-900">Reportes</Link>
-          <Link href="/settings" className="hover:text-slate-900">Ajustes</Link>
-        </nav>
-      </header>
-
+      <Navbar />
       <main className="max-w-6xl mx-auto px-6 py-8">
         <h2 className="text-2xl font-bold text-slate-900 mb-6">
           Resumen de {mesActual}

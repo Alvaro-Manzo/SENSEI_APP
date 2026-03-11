@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 
 interface Member {
   id: string;
@@ -27,6 +28,7 @@ export default function MembersPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <Navbar />
       <div className="max-w-4xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-slate-900">👥 Alumnos ({members.length})</h1>

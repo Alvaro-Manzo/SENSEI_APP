@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
+import Navbar from "@/components/Navbar";
 
 const MESES = ["","Enero","Febrero","Marzo","Abril","Mayo","Junio",
                "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
@@ -38,6 +39,7 @@ export default function PaymentsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <Navbar />
       <div className="max-w-5xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-slate-900">💵 Pagos</h1>

@@ -22,10 +22,13 @@ export const useAuthStore = create<AuthStore>()(
       token: null,
       setAuth: (user, token) => {
         localStorage.setItem("sensei_token", token);
+        // Cookie para el middleware (SSR)
+        document.cookie = `sensei_token=${token}; path=/; max-age=604800; SameSite=Lax`;
         set({ user, token });
       },
       logout: () => {
         localStorage.removeItem("sensei_token");
+        document.cookie = "sensei_token=; path=/; max-age=0";
         set({ user: null, token: null });
       },
     }),
